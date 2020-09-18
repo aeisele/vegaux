@@ -3,6 +3,7 @@ package com.andreaseisele.vegaux.vegauxserver.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "PLACES")
 public class Place extends BaseEntity<Long> {

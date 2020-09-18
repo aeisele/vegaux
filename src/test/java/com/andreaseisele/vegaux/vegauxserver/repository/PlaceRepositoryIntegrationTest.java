@@ -15,6 +15,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
@@ -31,10 +34,18 @@ class PlaceRepositoryIntegrationTest {
     @Autowired
     private PlaceRepository repository;
 
+    private GeometryFactory geometryFactory = new GeometryFactory();
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postGisContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postGisContainer::getUsername);
+        registry.add("spring.datasource.password", postGisContainer::getPassword);
+    }
+
     @Test
     void testInsertNewPlace() {
-        final Point point = new GeometryFactory().createPoint(new Coordinate(48.366512, 10.894446));
-        final Place place = new Place("test place", point);
+        final Place place = place("test place", 48.366512, 10.894446);
 
         final Place saved = repository.save(place);
 
@@ -43,11 +54,20 @@ class PlaceRepositoryIntegrationTest {
         assertThat(saved).isEqualTo(place);
     }
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postGisContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postGisContainer::getUsername);
-        registry.add("spring.datasource.password", postGisContainer::getPassword);
+    @Test
+    void testFindInDistance() {
+        final Place downtown = place("downtown aux", 48.370544, 10.897790);
+        final Place prinzreg = place("prinzreg", 48.367677, 10.889468);
+        final Place muc = place("Muc", 48.135124, 11.581981);
+        repository.saveAll(Arrays.asList(downtown, prinzreg, muc));
+
+        final List<Place> inDistance = repository.findInDistance(downtown.getLocation(), 2000);
+        assertThat(inDistance).containsOnly(downtown, prinzreg);
+    }
+
+    private Place place(String name, double latitude, double longitude) {
+        final Point point = geometryFactory.createPoint(new Coordinate(latitude, longitude));
+        return new Place(name, point);
     }
 
 }
