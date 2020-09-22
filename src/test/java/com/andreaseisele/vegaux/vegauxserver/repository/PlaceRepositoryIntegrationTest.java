@@ -1,5 +1,6 @@
 package com.andreaseisele.vegaux.vegauxserver.repository;
 
+import com.andreaseisele.vegaux.vegauxserver.dto.DistanceResult;
 import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -61,8 +62,10 @@ class PlaceRepositoryIntegrationTest {
         final Place muc = place("Muc", 48.135124, 11.581981);
         repository.saveAll(Arrays.asList(downtown, prinzreg, muc));
 
-        final List<Place> inDistance = repository.findInDistance(downtown.getLocation(), 2000);
-        assertThat(inDistance).containsOnly(downtown, prinzreg);
+        final List<DistanceResult> inDistance = repository.findInDistance(downtown.getLocation(), 2000);
+        assertThat(inDistance).hasSize(2);
+        inDistance.forEach(r -> assertThat(r.getDistanceMeters()).as("distance in meters").isNotNull());
+        assertThat(inDistance).extracting(DistanceResult::getPlace).containsOnly(downtown, prinzreg);
     }
 
     private Place place(String name, double latitude, double longitude) {
