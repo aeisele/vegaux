@@ -1,6 +1,6 @@
 package com.andreaseisele.vegaux.vegauxserver.repository;
 
-import com.andreaseisele.vegaux.vegauxserver.dto.DistanceResult;
+import com.andreaseisele.vegaux.vegauxserver.model.DistanceResult;
 import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -35,7 +35,7 @@ class PlaceRepositoryIntegrationTest {
     @Autowired
     private PlaceRepository repository;
 
-    private GeometryFactory geometryFactory = new GeometryFactory();
+    private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
@@ -69,7 +69,7 @@ class PlaceRepositoryIntegrationTest {
     }
 
     private Place place(String name, double latitude, double longitude) {
-        final Point point = geometryFactory.createPoint(new Coordinate(latitude, longitude));
+        final Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         return new Place(name, point);
     }
 

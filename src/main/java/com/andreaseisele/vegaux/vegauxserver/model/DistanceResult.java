@@ -1,6 +1,5 @@
-package com.andreaseisele.vegaux.vegauxserver.dto;
+package com.andreaseisele.vegaux.vegauxserver.model;
 
-import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import lombok.Value;
 
 @Value
