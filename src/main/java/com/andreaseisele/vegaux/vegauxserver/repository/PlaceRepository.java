@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface PlaceRepository extends PagingAndSortingRepository<Place, Long> {
 
-    @Query("select new com.andreaseisele.vegaux.vegauxserver.model.DistanceResult(p, distance(:center, p.location)) from Place p where distance(:center, p.location) <= :radiusMeters")
+    @Query("select new com.andreaseisele.vegaux.vegauxserver.model.DistanceResult(p, distance(:center, p.location)) from Place p where dwithin(:center, p.location, :radiusMeters) = true")
     List<DistanceResult> findInDistance(Point center, double radiusMeters);
 
 }

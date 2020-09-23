@@ -3,9 +3,6 @@ package com.andreaseisele.vegaux.vegauxserver.repository;
 import com.andreaseisele.vegaux.vegauxserver.model.DistanceResult;
 import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import org.junit.jupiter.api.Test;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,6 +16,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.andreaseisele.vegaux.vegauxserver.data.TestData.place;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
@@ -34,8 +32,6 @@ class PlaceRepositoryIntegrationTest {
 
     @Autowired
     private PlaceRepository repository;
-
-    private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
@@ -66,11 +62,6 @@ class PlaceRepositoryIntegrationTest {
         assertThat(inDistance).hasSize(2);
         inDistance.forEach(r -> assertThat(r.getDistanceMeters()).as("distance in meters").isNotNull());
         assertThat(inDistance).extracting(DistanceResult::getPlace).containsOnly(downtown, prinzreg);
-    }
-
-    private Place place(String name, double latitude, double longitude) {
-        final Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-        return new Place(name, point);
     }
 
 }

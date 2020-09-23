@@ -19,16 +19,18 @@ public class GeoUtil {
 
     public Point toPoint(GeoCoordinate coordinate) {
         Objects.requireNonNull(coordinate, "coordinate must not be null");
-        final Double latitude = Objects.requireNonNull(coordinate.getLatitude(), "latitude must not be null");
-        final Double longitude = Objects.requireNonNull(coordinate.getLongitude(), "longitude must not be null");
+        return toPoint(coordinate.getLatitude(), coordinate.getLongitude());
+    }
+
+    public Point toPoint(Double latitude, Double longitude) {
+        Objects.requireNonNull(latitude, "latitude must not be null");
+        Objects.requireNonNull(longitude, "longitude must not be null");
         return geometryFactory.createPoint(new Coordinate(longitude, latitude));
     }
 
     public GeoCoordinate toCoordinate(Point point) {
         Objects.requireNonNull(point, "point must not be null");
-        final Double x = Objects.requireNonNull(point.getX(), "x must not be null");
-        final Double y = Objects.requireNonNull(point.getY(), "y must not be null");
-        return new GeoCoordinate(y, x);
+        return new GeoCoordinate(point.getY(), point.getX());
     }
 
 }
