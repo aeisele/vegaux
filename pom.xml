@@ -53,6 +53,13 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52 -->
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.9.13</version>
+        </dependency>
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
