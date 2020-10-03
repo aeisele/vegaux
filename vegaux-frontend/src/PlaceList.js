@@ -7,20 +7,42 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TablePagination from "@material-ui/core/TablePagination";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 function PlaceList() {
 
-    const [places, setPlaces] = useState([])
-    const [page, setPage] = useState({})
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(10);
+    const [sort, setSort] = useState('name');
+    const [dir, setDir] = useState('ASC');
+    const [places, setPlaces] = useState([]);
 
     useEffect(() => {
-        fetch("/api/places")
-            .then(response => response.json())
-            .then(data => {
-                setPage(data);
-                setPlaces(data.content);
-            });
-    }, []);
+        (async () => {
+            const response = await fetch(`/api/places?page=${page}&size=${size}&sort=${sort},${dir}`)
+            const data = await response.json();
+            setPlaces(data.content);
+        })();
+
+    }, [page, size, sort, dir]);
+
+    const handleChangePage = (event, page) => {
+        setPage(page);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setSize(event.target.value);
+    };
+
+    const createSortHandler = (property) => (event) => {
+        handleSort(event, property)
+    }
+
+    const handleSort = (event, property) => {
+        const isAsc = sort === property && dir === 'ASC';
+        setDir(isAsc ? 'DESC' : 'ASC');
+        setSort(property);
+    };
 
     const placeItems = places.map(place => {
         return (
@@ -28,21 +50,21 @@ function PlaceList() {
         )
     });
 
-    const handleChangePage = (event) => {
-        console.log(event);
-    }
-
-    const handleChangeRowsPerPage = (event) => {
-        console.log(event);
-    }
-
     return (
         <Paper>
             <TableContainer component={Paper}>
                 <Table aria-label="Places">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
+                            <TableCell>
+                                <TableSortLabel
+                                    active={sort === 'name'}
+                                    direction={dir === 'ASC' ? 'asc' : 'desc'}
+                                    onClick={createSortHandler('name')}
+                                >
+                                    Name
+                                </TableSortLabel>
+                            </TableCell>
                             <TableCell>Latitude</TableCell>
                             <TableCell>Longitude</TableCell>
                         </TableRow>
@@ -52,9 +74,9 @@ function PlaceList() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPage={page.size}
-                    count={page.numberOfElements}
-                    page={page.number}
+                    rowsPerPage={size}
+                    count={places.length}
+                    page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
