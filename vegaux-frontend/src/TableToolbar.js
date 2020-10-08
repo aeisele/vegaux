@@ -52,9 +52,11 @@ function TableToolbar(props) {
     if (numSelected > 0) {
         toolButtons.push((
             <Tooltip key="edit-button" title="Edit">
-                <IconButton aria-label="edit" onClick={onEdit} disabled={numSelected > 1}>
-                    <EditIcon/>
-                </IconButton>
+                <span>
+                    <IconButton aria-label="edit" onClick={onEdit} disabled={numSelected > 1}>
+                        <EditIcon/>
+                    </IconButton>
+                </span>
             </Tooltip>
         ), (
             <Tooltip key="delete-button" title="Delete">

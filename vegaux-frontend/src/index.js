@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {ThemeProvider, createMuiTheme} from "@material-ui/core/styles";
+import {BrowserRouter} from "react-router-dom";
 
 const theme = createMuiTheme({
     palette: {
@@ -20,7 +21,9 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </ThemeProvider>
     </div>,
     document.querySelector('#root'),
