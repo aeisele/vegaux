@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,6 +40,10 @@ public class PlaceService {
 
     public List<DistanceResult> findInDistance(GeoCoordinate origin, double radiusMeters) {
         return repository.findInDistance(geoUtil.toPoint(origin), radiusMeters);
+    }
+
+    public Optional<Place> findById(Long id) {
+        return repository.findById(id);
     }
 
     @Transactional

@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import PlaceListItem from "./PlaceListItem";
-import {Paper, TableContainer} from "@material-ui/core";
+import {TableContainer} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -10,7 +10,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableFooter from "@material-ui/core/TableFooter";
 import Checkbox from "@material-ui/core/Checkbox";
-import TableToolbar from "./TableToolbar";
+import TableToolbar from "../TableToolbar";
+import {fetchPlaces} from "./PlaceService";
 
 function PlaceList() {
 
@@ -23,8 +24,7 @@ function PlaceList() {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(`/api/places?page=${page}&size=${size}&sort=${sort},${dir}`)
-            const data = await response.json();
+            const data = await fetchPlaces(page, size, sort, dir);
             setPlaces(data.content);
         })();
 
@@ -95,7 +95,7 @@ function PlaceList() {
     const rowCount = places.length;
 
     return (
-        <Paper>
+        <Fragment>
             <TableToolbar
                 numSelected={numSelected}
                 caption="Places"
@@ -147,7 +147,7 @@ function PlaceList() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </Paper>
+        </Fragment>
     );
 
 }

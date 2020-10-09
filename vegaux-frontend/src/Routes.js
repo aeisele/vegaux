@@ -1,8 +1,8 @@
 import React, {Fragment} from "react";
 import {Switch, Route} from "react-router-dom";
 import Home from "./Home";
-import PlaceList from "./PlaceList";
-import PlaceForm from "./PlaceForm";
+import PlaceList from "./place/PlaceList";
+import PlaceForm from "./place/PlaceForm";
 
 const ReactRouter = () => {
     return (

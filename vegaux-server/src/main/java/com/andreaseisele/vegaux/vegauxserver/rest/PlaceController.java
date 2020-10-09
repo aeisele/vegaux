@@ -8,6 +8,7 @@ import com.andreaseisele.vegaux.vegauxserver.service.PlaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +36,14 @@ public class PlaceController {
     public Page<PlaceDto> findAll(Pageable pageable) {
         return service.findAll(pageable)
                 .map(dtoMapper::toDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PlaceDto> findById(@PathVariable Long id) {
+        return service.findById(id)
+                .map(dtoMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping(DISTANCE_URL)

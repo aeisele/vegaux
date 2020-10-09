@@ -5,7 +5,7 @@ const Home = () => {
     return (
         <Fragment>
             <header>
-                <h1>VEGAUX</h1>
+                <h1>Menu</h1>
             </header>
             <ul>
                 <li>
