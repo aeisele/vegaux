@@ -1,24 +1,27 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {useParams, useHistory} from "react-router-dom";
-import {fetchPlaceById} from "./PlaceService";
+import {fetchPlaceById, savePlace} from "./PlaceService";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {TextField} from "formik-material-ui";
 import Button from "@material-ui/core/Button";
 import {Typography} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const PlaceSchema = Yup.object().shape({
     name: Yup.string()
         .max(255, 'Too Long!')
         .required(),
-    latitude: Yup.number()
-        .required(),
-    longitude: Yup.number()
-        .required()
+    location: Yup.object().shape({
+        latitude: Yup.number()
+            .required('Latitude is required'),
+        longitude: Yup.number()
+            .required('Longitude is required')
+    })
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -29,13 +32,14 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(3),
         marginLeft: theme.spacing(1),
-    },
+    }
 }));
 
 const PlaceForm = () => {
 
     const [fetchError, setFetchError] = useState(false);
     const [place, setPlace] = useState({
+        id: '',
         name: '',
         location: {
             latitude: '',
@@ -56,6 +60,7 @@ const PlaceForm = () => {
                     const fetched = await fetchPlaceById(placeId);
                     setPlace(fetched);
                 } catch (error) {
+                    console.log(error);
                     setFetchError(true);
                 }
             })();
@@ -66,26 +71,47 @@ const PlaceForm = () => {
         history.push("/places");
     };
 
+    const handleSubmit = async (values, actions) => {
+        try {
+            const saved = await savePlace(values)
+            setPlace(saved);
+        } catch (error) {
+            console.log(error);
+            setFetchError(true);
+        }
+        actions.setSubmitting(false);
+    };
+
     const classes = useStyles();
 
     return (
         <Fragment>
             <Typography variant="h6" gutterBottom>{caption} {!isNew && place.name}</Typography>
             <Snackbar open={fetchError}>
-                <Alert severity="error">Error fetching place info from server!</Alert>
+                <Alert severity="error">Error communicating with server!</Alert>
             </Snackbar>
             <Formik
                 initialValues={place}
                 enableReinitialize={true}
                 validationSchema={PlaceSchema}
-                onSubmit={(values, {setSubmitting}) => {
-                    // todo
-                    setSubmitting(false);
-                }}
+                onSubmit={handleSubmit}
             >
                 {({submitForm, isSubmitting}) => (
-                    <Grid container spacing={3}>
-                        <Form>
+                    <Form>
+                        <Grid container spacing={2}>
+
+                            {!isNew && (
+                                <Grid item xs={12}>
+                                    <Field
+                                        type="text"
+                                        name="id"
+                                        component={TextField}
+                                        label="Place Id"
+                                        fullWidth
+                                        disabled
+                                    />
+                                </Grid>
+                            )}
 
                             <Grid item xs={12}>
                                 <Field
@@ -94,30 +120,34 @@ const PlaceForm = () => {
                                     component={TextField}
                                     label="Place Name"
                                     fullWidth
+                                    required
                                 />
-                                <ErrorMessage name="name" component="div"/>
                             </Grid>
 
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={6}>
                                 <Field
                                     type="number"
                                     name="location.latitude"
                                     component={TextField}
                                     label="Location Latitude"
                                     fullWidth
+                                    required
                                 />
-                                <ErrorMessage name="location.latitude" component="div"/>
                             </Grid>
 
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={6}>
                                 <Field
                                     type="number"
                                     name="location.longitude"
                                     component={TextField}
                                     label="Location Longitude"
                                     fullWidth
+                                    required
                                 />
-                                <ErrorMessage name="location.longitude" component="div"/>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                {isSubmitting && <LinearProgress/>}
                             </Grid>
 
                             <div className={classes.buttons}>
@@ -139,8 +169,8 @@ const PlaceForm = () => {
                                     Back
                                 </Button>
                             </div>
-                        </Form>
-                    </Grid>
+                        </Grid>
+                    </Form>
                 )}
             </Formik>
         </Fragment>
