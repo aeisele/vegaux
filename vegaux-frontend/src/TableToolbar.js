@@ -29,7 +29,7 @@ function TableToolbar(props) {
 
     const classes = useStyles();
 
-    const {numSelected, caption, onCreate, onEdit, onDelete} = props;
+    const {numSelected, caption, itemName, onCreate, onEdit, onDelete} = props;
 
     const heading = (numSelected > 0) ? (
         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
@@ -42,7 +42,7 @@ function TableToolbar(props) {
     );
 
     let toolButtons = [(
-        <Tooltip key="create-button" title="Create">
+        <Tooltip key="create-button" title={'Create new ' + itemName}>
             <IconButton aria-label="new" onClick={onCreate}>
                 <AddBoxIcon/>
             </IconButton>

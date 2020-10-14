@@ -80,6 +80,9 @@ const PlaceForm = () => {
             setFetchError(true);
         }
         actions.setSubmitting(false);
+        if (isNew) {
+            goBack();
+        }
     };
 
     const classes = useStyles();

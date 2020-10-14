@@ -18,7 +18,8 @@ export const fetchPlaceById = async (id) => {
 };
 
 export const savePlace = async (place) => {
-    const isNew = !!place.id;
+    // todo: find a better way to check this
+    const isNew = place.id === null || place.id === undefined || place.id === '';
     const method = isNew ? 'POST' : 'PUT';
     const url = isNew ? baseUrl : `${baseUrl}/${place.id}`
 
@@ -32,3 +33,10 @@ export const savePlace = async (place) => {
     });
     return response.json();
 };
+
+export const deletePlace = async (id) => {
+    const response = await fetch(`${baseUrl}/${id}`, {
+        method: 'DELETE'
+    });
+    return response.ok;
+}

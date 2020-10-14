@@ -11,7 +11,8 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableFooter from "@material-ui/core/TableFooter";
 import Checkbox from "@material-ui/core/Checkbox";
 import TableToolbar from "../TableToolbar";
-import {fetchPlaces} from "./PlaceService";
+import {deletePlace, fetchPlaces} from "./PlaceService";
+import {useHistory} from "react-router-dom";
 
 function PlaceList() {
 
@@ -29,6 +30,8 @@ function PlaceList() {
         })();
 
     }, [page, size, sort, dir]);
+
+    const history = useHistory();
 
     const handleChangePage = (event, page) => {
         setPage(page);
@@ -68,16 +71,24 @@ function PlaceList() {
         return selected.indexOf(id) !== -1;
     }
 
-    const onCreate = () => {
-        console.log("on create");
+    const handleCreate = () => {
+        history.push("/places/new");
     }
 
-    const onEdit = () => {
-        console.log("on edit");
+    const handleEdit = () => {
+        const id = selected[0];
+        history.push(`/places/${id}`);
     }
 
-    const onDelete = () => {
-        console.log("on delete");
+    const handleDelete = async () => {
+        try {
+            await Promise.all(selected.map(async (id) => {
+                await deletePlace(id);
+            }))
+        } catch (error) {
+            console.log(error);
+        }
+        history.go(0);
     }
 
     const placeItems = places.map((place, index) => {
@@ -99,9 +110,10 @@ function PlaceList() {
             <TableToolbar
                 numSelected={numSelected}
                 caption="Places"
-                onCreate={onCreate}
-                onEdit={onEdit}
-                onDelete={onDelete}
+                itemName="place"
+                onCreate={handleCreate}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
             />
             <TableContainer>
                 <Table aria-label="Places">
