@@ -13,6 +13,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import TableToolbar from "../TableToolbar";
 import {deletePlace, fetchPlaces} from "./PlaceService";
 import {useHistory} from "react-router-dom";
+import Spinner from "../Spinner";
 
 function PlaceList() {
 
@@ -22,6 +23,7 @@ function PlaceList() {
     const [dir, setDir] = useState('ASC');
     const [places, setPlaces] = useState([]);
     const [selected, setSelected] = useState([]);
+    const [busy, setBusy] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -81,6 +83,7 @@ function PlaceList() {
     }
 
     const handleDelete = async () => {
+        setBusy(true);
         try {
             await Promise.all(selected.map(async (id) => {
                 await deletePlace(id);
@@ -88,6 +91,7 @@ function PlaceList() {
         } catch (error) {
             console.log(error);
         }
+        setBusy(false);
         history.go(0);
     }
 
@@ -107,6 +111,7 @@ function PlaceList() {
 
     return (
         <Fragment>
+            <Spinner show={busy}/>
             <TableToolbar
                 numSelected={numSelected}
                 caption="Places"
