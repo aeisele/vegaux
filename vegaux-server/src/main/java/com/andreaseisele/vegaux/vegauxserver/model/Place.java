@@ -16,9 +16,10 @@ import javax.persistence.*;
 @Table(name = "PLACES")
 public class Place extends BaseEntity<Long> {
 
-    public Place(String name, Point location) {
+    public Place(String name, Point location, Address address) {
         this.name = name;
         this.location = location;
+        this.address = address;
     }
 
     @Id
@@ -28,5 +29,8 @@ public class Place extends BaseEntity<Long> {
     private String name;
 
     private Point location;
+
+    @Embedded
+    private Address address;
 
 }

@@ -2,6 +2,7 @@ package com.andreaseisele.vegaux.vegauxserver.service;
 
 import com.andreaseisele.vegaux.vegauxserver.dto.GeoCoordinate;
 import com.andreaseisele.vegaux.vegauxserver.geo.GeoUtil;
+import com.andreaseisele.vegaux.vegauxserver.model.Address;
 import com.andreaseisele.vegaux.vegauxserver.model.DistanceResult;
 import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import com.andreaseisele.vegaux.vegauxserver.repository.PlaceRepository;
@@ -28,8 +29,8 @@ public class PlaceService {
     }
 
     @Transactional
-    public Place create(String name, GeoCoordinate location) {
-        final Place place = new Place(name, geoUtil.toPoint(location));
+    public Place create(String name, GeoCoordinate location, Address address) {
+        final Place place = new Place(name, geoUtil.toPoint(location), address);
         log.debug("saving new place {}", place);
         return repository.save(place);
     }

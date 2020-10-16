@@ -10,6 +10,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
+import static com.andreaseisele.vegaux.vegauxserver.data.TestData.randomAddress;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -33,6 +34,7 @@ class PlaceDtoMapTest {
         dto.setId(1234L);
         dto.setName("test");
         dto.setLocation(coordinate);
+        dto.setAddress(randomAddress());
 
         final Place entity = modelMapper.map(dto, Place.class);
 
@@ -43,5 +45,6 @@ class PlaceDtoMapTest {
         assertThat(entity.getLocation()).isNotNull();
         assertThat(entity.getLocation().getX()).isEqualTo(coordinate.getLongitude());
         assertThat(entity.getLocation().getY()).isEqualTo(coordinate.getLatitude());
+        assertThat(entity.getAddress()).isEqualTo(dto.getAddress());
     }
 }

@@ -57,7 +57,7 @@ public class PlaceController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PlaceDto create(@RequestBody @Valid PlaceDto placeDto) {
-        return dtoMapper.toDto(service.create(placeDto.getName(), placeDto.getLocation()));
+        return dtoMapper.toDto(service.create(placeDto.getName(), placeDto.getLocation(), placeDto.getAddress()));
     }
 
     @PutMapping("/{id}")

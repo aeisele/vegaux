@@ -1,5 +1,6 @@
 package com.andreaseisele.vegaux.vegauxserver.dto;
 
+import com.andreaseisele.vegaux.vegauxserver.model.Address;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -15,5 +16,8 @@ public class PlaceDto {
 
     @Valid
     GeoCoordinate location;
+
+    @Valid
+    Address address;
 
 }

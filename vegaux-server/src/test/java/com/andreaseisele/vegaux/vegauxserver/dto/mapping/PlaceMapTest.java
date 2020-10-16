@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
+import static com.andreaseisele.vegaux.vegauxserver.data.TestData.randomAddress;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PlaceMapTest {
@@ -29,7 +30,7 @@ class PlaceMapTest {
     @Test
     void testMapAndValidate() {
         final Point point = new GeometryFactory().createPoint(new Coordinate(1, 2));
-        final Place place = new Place("test", point);
+        final Place place = new Place("test", point, randomAddress());
         place.setId(1234L);
 
         final PlaceDto dto = modelMapper.map(place, PlaceDto.class);
@@ -40,6 +41,7 @@ class PlaceMapTest {
         assertThat(dto.getLocation()).isNotNull();
         assertThat(dto.getLocation().getLatitude()).isEqualTo(point.getY());
         assertThat(dto.getLocation().getLongitude()).isEqualTo(point.getX());
+        assertThat(dto.getAddress()).isEqualTo(place.getAddress());
     }
 
 }

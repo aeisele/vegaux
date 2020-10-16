@@ -15,6 +15,20 @@
             <column name="LOCATION" type="geography(POINT)">
                 <constraints nullable="false"/>
             </column>
+            <column name="ADDRESS_LINE1" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS_LINE2" type="varchar(255)"/>
+            <column name="ZIP_CODE" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CITY" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATE" type="varchar(255)"/>
+            <column name="COUNTRY" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

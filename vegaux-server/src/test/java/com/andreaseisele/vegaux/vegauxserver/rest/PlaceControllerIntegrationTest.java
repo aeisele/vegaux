@@ -4,6 +4,7 @@ import com.andreaseisele.vegaux.vegauxserver.data.TestData;
 import com.andreaseisele.vegaux.vegauxserver.dto.GeoCoordinate;
 import com.andreaseisele.vegaux.vegauxserver.dto.PlaceDto;
 import com.andreaseisele.vegaux.vegauxserver.dto.mapping.DtoMapper;
+import com.andreaseisele.vegaux.vegauxserver.model.Address;
 import com.andreaseisele.vegaux.vegauxserver.model.DistanceResult;
 import com.andreaseisele.vegaux.vegauxserver.model.Place;
 import com.andreaseisele.vegaux.vegauxserver.service.PlaceService;
@@ -92,7 +93,7 @@ class PlaceControllerIntegrationTest {
     @Test
     void testCreate_Created() throws Exception {
         final Place randomPlace = TestData.place();
-        when(service.create(anyString(), any(GeoCoordinate.class))).thenReturn(randomPlace);
+        when(service.create(anyString(), any(GeoCoordinate.class), any(Address.class))).thenReturn(randomPlace);
 
         final String payload = objectMapper.writeValueAsString(dtoMapper.toDto(randomPlace));
 
@@ -108,7 +109,7 @@ class PlaceControllerIntegrationTest {
     @Test
     void testCreate_MissingValue() throws Exception {
         final Place randomPlace = TestData.place();
-        when(service.create(anyString(), any(GeoCoordinate.class))).thenReturn(randomPlace);
+        when(service.create(anyString(), any(GeoCoordinate.class), any(Address.class))).thenReturn(randomPlace);
 
         final PlaceDto dto = dtoMapper.toDto(randomPlace);
         dto.getLocation().setLatitude(null);
