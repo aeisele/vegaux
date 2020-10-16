@@ -11,6 +11,8 @@ import {Typography} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import {Search} from "@material-ui/icons";
+import {geoCode} from "../geo/GeoCoder";
 
 const PlaceSchema = Yup.object().shape({
     name: Yup.string()
@@ -21,6 +23,24 @@ const PlaceSchema = Yup.object().shape({
             .required('Latitude is required'),
         longitude: Yup.number()
             .required('Longitude is required')
+    }),
+    address: Yup.object().shape({
+        addressLine1: Yup.string()
+            .max(255, 'Too Long!')
+            .required('Address Line 1 is required'),
+        addressLine2: Yup.string()
+            .max(255, 'Too Long!'),
+        zipCode: Yup.string()
+            .max(25, 'Too Long!')
+            .required('Zip Code is required'),
+        city: Yup.string()
+            .max(255, 'Too Long!')
+            .required('City is required'),
+        state: Yup.string()
+            .max(255, 'Too Long!'),
+        country: Yup.string()
+            .max(255, 'Too Long!')
+            .required('Country is required')
     })
 });
 
@@ -38,12 +58,21 @@ const useStyles = makeStyles((theme) => ({
 const PlaceForm = () => {
 
     const [fetchError, setFetchError] = useState(false);
+    const [busy, setBusy] = useState(false);
     const [place, setPlace] = useState({
         id: '',
         name: '',
         location: {
             latitude: '',
             longitude: ''
+        },
+        address: {
+            addressLine1: '',
+            addressLine2: '',
+            zipCode: '',
+            city: '',
+            state: '',
+            country: ''
         }
     });
 
@@ -70,6 +99,17 @@ const PlaceForm = () => {
     const goBack = () => {
         history.push("/places");
     };
+
+    const handleClickGeoCode = async (values, setFieldValue) => {
+        setBusy(true);
+        const geoLocation = await geoCode(values.address);
+        console.log(geoLocation);
+        if (geoLocation) {
+            setFieldValue('location.latitude', geoLocation.latitude);
+            setFieldValue('location.longitude', geoLocation.longitude);
+        }
+        setBusy(false);
+    }
 
     const handleSubmit = async (values, actions) => {
         try {
@@ -99,7 +139,12 @@ const PlaceForm = () => {
                 validationSchema={PlaceSchema}
                 onSubmit={handleSubmit}
             >
-                {({submitForm, isSubmitting}) => (
+                {({
+                      submitForm,
+                      isSubmitting,
+                      values,
+                      setFieldValue
+                  }) => (
                     <Form>
                         <Grid container spacing={2}>
 
@@ -127,7 +172,82 @@ const PlaceForm = () => {
                                 />
                             </Grid>
 
+                            <Grid item xs={12}>
+                                <Field
+                                    type="text"
+                                    name="address.addressLine1"
+                                    component={TextField}
+                                    label="Address line 1"
+                                    fullWidth
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Field
+                                    type="text"
+                                    name="address.addressLine2"
+                                    component={TextField}
+                                    label="Address line 2"
+                                    fullWidth
+                                />
+                            </Grid>
+
                             <Grid item xs={6}>
+                                <Field
+                                    type="text"
+                                    name="address.zipCode"
+                                    component={TextField}
+                                    label="Zip / Postal code"
+                                    fullWidth
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <Field
+                                    type="text"
+                                    name="address.city"
+                                    component={TextField}
+                                    label="City"
+                                    fullWidth
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <Field
+                                    type="text"
+                                    name="address.state"
+                                    component={TextField}
+                                    label="State"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <Field
+                                    type="text"
+                                    name="address.country"
+                                    component={TextField}
+                                    label="Country"
+                                    fullWidth
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={6} align="right">
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    startIcon={<Search/>}
+                                    onClick={() => handleClickGeoCode(values, setFieldValue)}
+                                >
+                                    Lookup Geo Location
+                                </Button>
+                            </Grid>
+
+                            <Grid item xs={3}>
                                 <Field
                                     type="number"
                                     name="location.latitude"
@@ -138,7 +258,7 @@ const PlaceForm = () => {
                                 />
                             </Grid>
 
-                            <Grid item xs={6}>
+                            <Grid item xs={3}>
                                 <Field
                                     type="number"
                                     name="location.longitude"
@@ -150,7 +270,7 @@ const PlaceForm = () => {
                             </Grid>
 
                             <Grid item xs={12}>
-                                {isSubmitting && <LinearProgress/>}
+                                {(isSubmitting || busy) && <LinearProgress/>}
                             </Grid>
 
                             <div className={classes.buttons}>
