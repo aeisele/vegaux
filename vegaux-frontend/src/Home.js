@@ -11,6 +11,9 @@ const Home = () => {
                 <li>
                     <Link to="/places">Place List</Link>
                 </li>
+                <li>
+                    <Link to="/map">Map</Link>
+                </li>
             </ul>
         </Fragment>
     );

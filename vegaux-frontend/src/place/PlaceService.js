@@ -17,6 +17,13 @@ export const fetchPlaceById = async (id) => {
     return response.json();
 };
 
+export const fetchPlacesInDistance = async (origin, distanceMeters) => {
+    const response = await fetch(`${baseUrl}/inDistance?latitude=${origin.latitude}&longitude=${origin.longitude}&radiusMeters=${distanceMeters}`, {
+        headers: defaultHeaders
+    });
+    return response.json();
+};
+
 export const savePlace = async (place) => {
     // todo: find a better way to check this
     const isNew = place.id === null || place.id === undefined || place.id === '';
