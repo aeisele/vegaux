@@ -13,6 +13,8 @@ import {makeStyles} from "@material-ui/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {Search} from "@material-ui/icons";
 import {geoCode} from "../geo/GeoCoder";
+import Paper from "@material-ui/core/Paper";
+import {commonStyles, useCommonStyles} from "../styles/commonStyles";
 
 const PlaceSchema = Yup.object().shape({
     name: Yup.string()
@@ -125,177 +127,180 @@ const PlaceForm = () => {
         }
     };
 
+    const commonClasses = useCommonStyles();
     const classes = useStyles();
 
     return (
         <Fragment>
-            <Typography variant="h6" gutterBottom>{caption} {!isNew && place.name}</Typography>
-            <Snackbar open={fetchError}>
-                <Alert severity="error">Error communicating with server!</Alert>
-            </Snackbar>
-            <Formik
-                initialValues={place}
-                enableReinitialize={true}
-                validationSchema={PlaceSchema}
-                onSubmit={handleSubmit}
-            >
-                {({
-                      submitForm,
-                      isSubmitting,
-                      values,
-                      setFieldValue
-                  }) => (
-                    <Form>
-                        <Grid container spacing={2}>
+            <Paper className={commonClasses.fullPaper}>
+                <Typography variant="h6" gutterBottom>{caption} {!isNew && place.name}</Typography>
+                <Snackbar open={fetchError}>
+                    <Alert severity="error">Error communicating with server!</Alert>
+                </Snackbar>
+                <Formik
+                    initialValues={place}
+                    enableReinitialize={true}
+                    validationSchema={PlaceSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({
+                          submitForm,
+                          isSubmitting,
+                          values,
+                          setFieldValue
+                      }) => (
+                        <Form>
+                            <Grid container spacing={2}>
 
-                            {!isNew && (
+                                {!isNew && (
+                                    <Grid item xs={12}>
+                                        <Field
+                                            type="text"
+                                            name="id"
+                                            component={TextField}
+                                            label="Place Id"
+                                            fullWidth
+                                            disabled
+                                        />
+                                    </Grid>
+                                )}
+
                                 <Grid item xs={12}>
                                     <Field
                                         type="text"
-                                        name="id"
+                                        name="name"
                                         component={TextField}
-                                        label="Place Id"
+                                        label="Place Name"
                                         fullWidth
-                                        disabled
+                                        required
                                     />
                                 </Grid>
-                            )}
 
-                            <Grid item xs={12}>
-                                <Field
-                                    type="text"
-                                    name="name"
-                                    component={TextField}
-                                    label="Place Name"
-                                    fullWidth
-                                    required
-                                />
+                                <Grid item xs={12}>
+                                    <Field
+                                        type="text"
+                                        name="address.addressLine1"
+                                        component={TextField}
+                                        label="Address line 1"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <Field
+                                        type="text"
+                                        name="address.addressLine2"
+                                        component={TextField}
+                                        label="Address line 2"
+                                        fullWidth
+                                    />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <Field
+                                        type="text"
+                                        name="address.zipCode"
+                                        component={TextField}
+                                        label="Zip / Postal code"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <Field
+                                        type="text"
+                                        name="address.city"
+                                        component={TextField}
+                                        label="City"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <Field
+                                        type="text"
+                                        name="address.state"
+                                        component={TextField}
+                                        label="State"
+                                        fullWidth
+                                    />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <Field
+                                        type="text"
+                                        name="address.country"
+                                        component={TextField}
+                                        label="Country"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={6} align="right">
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<Search/>}
+                                        onClick={() => handleClickGeoCode(values, setFieldValue)}
+                                    >
+                                        Lookup Geo Location
+                                    </Button>
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <Field
+                                        type="number"
+                                        name="location.latitude"
+                                        component={TextField}
+                                        label="Location Latitude"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <Field
+                                        type="number"
+                                        name="location.longitude"
+                                        component={TextField}
+                                        label="Location Longitude"
+                                        fullWidth
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    {(isSubmitting || busy) && <LinearProgress/>}
+                                </Grid>
+
+                                <div className={classes.buttons}>
+                                    <Button
+                                        className={classes.button}
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={isSubmitting || fetchError}
+                                        onClick={submitForm}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        className={classes.button}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={(event) => goBack(event)}
+                                    >
+                                        Back
+                                    </Button>
+                                </div>
                             </Grid>
-
-                            <Grid item xs={12}>
-                                <Field
-                                    type="text"
-                                    name="address.addressLine1"
-                                    component={TextField}
-                                    label="Address line 1"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Field
-                                    type="text"
-                                    name="address.addressLine2"
-                                    component={TextField}
-                                    label="Address line 2"
-                                    fullWidth
-                                />
-                            </Grid>
-
-                            <Grid item xs={6}>
-                                <Field
-                                    type="text"
-                                    name="address.zipCode"
-                                    component={TextField}
-                                    label="Zip / Postal code"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={6}>
-                                <Field
-                                    type="text"
-                                    name="address.city"
-                                    component={TextField}
-                                    label="City"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={6}>
-                                <Field
-                                    type="text"
-                                    name="address.state"
-                                    component={TextField}
-                                    label="State"
-                                    fullWidth
-                                />
-                            </Grid>
-
-                            <Grid item xs={6}>
-                                <Field
-                                    type="text"
-                                    name="address.country"
-                                    component={TextField}
-                                    label="Country"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={6} align="right">
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    startIcon={<Search/>}
-                                    onClick={() => handleClickGeoCode(values, setFieldValue)}
-                                >
-                                    Lookup Geo Location
-                                </Button>
-                            </Grid>
-
-                            <Grid item xs={3}>
-                                <Field
-                                    type="number"
-                                    name="location.latitude"
-                                    component={TextField}
-                                    label="Location Latitude"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={3}>
-                                <Field
-                                    type="number"
-                                    name="location.longitude"
-                                    component={TextField}
-                                    label="Location Longitude"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                {(isSubmitting || busy) && <LinearProgress/>}
-                            </Grid>
-
-                            <div className={classes.buttons}>
-                                <Button
-                                    className={classes.button}
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isSubmitting || fetchError}
-                                    onClick={submitForm}
-                                >
-                                    Save
-                                </Button>
-                                <Button
-                                    className={classes.button}
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={(event) => goBack(event)}
-                                >
-                                    Back
-                                </Button>
-                            </div>
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
+            </Paper>
         </Fragment>
     );
 };

@@ -1,17 +1,20 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import {Map, TileLayer, Marker, Popup} from "react-leaflet";
-import {fetchPlacesInDistance} from "../place/PlaceService";
+import {makeStyles} from "@material-ui/styles";
 
-const PlaceMap = () => {
+const useStyles = makeStyles((theme) => ({
+    mapContainer: {
+        width: '100%',
+        height: '80vh'
+    }
+}));
 
-    const [origin] = useState({
-        latitude: 48.3668041,
-        longitude: 10.8986971
-    });
-    const [zoom] = useState(12);
-    const [distanceMeters] = useState(25000);
-    const [placesInDistance, setPlacesInDistance] = useState([]);
+const PlaceMap = (props) => {
+
+    const {origin, placesInDistance} = props;
+
+    const [zoom] = useState(13);
 
     useEffect(() => {
         const L = require('leaflet');
@@ -25,35 +28,35 @@ const PlaceMap = () => {
         });
     }, []);
 
-    useEffect(() => {
-        (async () => {
-            const result = await fetchPlacesInDistance(origin, distanceMeters);
-            setPlacesInDistance(result);
-        })();
-    }, [origin, distanceMeters]);
-
     const markers = placesInDistance.map((distanceResult) => {
         const place = distanceResult.place;
         return (
             <Marker key={place.id} position={[place.location.latitude, place.location.longitude]}>
                 <Popup>
                     {place.name}
-                    <br />
+                    <br/>
                     {distanceResult.distanceMeters}
                 </Popup>
             </Marker>
         );
     });
 
+    const classes = useStyles();
+
     return (
         <Fragment>
-            <Map center={[origin.latitude, origin.longitude]} zoom={zoom} style={{height: 250}}>
-                <TileLayer
-                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {markers}
-            </Map>
+            <div>
+                <Map center={[origin.latitude, origin.longitude]}
+                     zoom={zoom}
+                     className={classes.mapContainer}
+                >
+                    <TileLayer
+                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {markers}
+                </Map>
+            </div>
         </Fragment>
     )
 };

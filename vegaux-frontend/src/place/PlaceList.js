@@ -14,6 +14,8 @@ import TableToolbar from "../TableToolbar";
 import {deletePlace, fetchPlaces} from "./PlaceService";
 import {useHistory} from "react-router-dom";
 import Spinner from "../Spinner";
+import Paper from "@material-ui/core/Paper";
+import {useCommonStyles} from "../styles/commonStyles";
 
 function PlaceList() {
 
@@ -106,64 +108,68 @@ function PlaceList() {
         )
     });
 
+    const commonClasses = useCommonStyles();
+
     const numSelected = selected.length;
     const rowCount = places.length;
 
     return (
         <Fragment>
-            <Spinner show={busy}/>
-            <TableToolbar
-                numSelected={numSelected}
-                caption="Places"
-                itemName="place"
-                onCreate={handleCreate}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-            />
-            <TableContainer>
-                <Table aria-label="Places">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell padding="checkbox">
-                                <Checkbox
-                                    indeterminate={numSelected > 0 && numSelected < rowCount}
-                                    checked={rowCount > 0 && numSelected === rowCount}
-                                    onChange={handleSelectAll}
-                                    inputProps={{'aria-label' : 'select all places'}}
-                                />
-                            </TableCell>
-                            <TableCell
-                                align="left"
-                                sortDirection={sort === 'name' ? dir.toLowerCase() : false}
-                            >
-                                <TableSortLabel
-                                    active={sort === 'name'}
-                                    direction={dir === 'ASC' ? 'asc' : 'desc'}
-                                    onClick={(event) => handleSort(event, 'name')}
+            <Paper className={commonClasses.fullPaper}>
+                <Spinner show={busy}/>
+                <TableToolbar
+                    numSelected={numSelected}
+                    caption="Places"
+                    itemName="place"
+                    onCreate={handleCreate}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                />
+                <TableContainer>
+                    <Table aria-label="Places">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                                        checked={rowCount > 0 && numSelected === rowCount}
+                                        onChange={handleSelectAll}
+                                        inputProps={{'aria-label': 'select all places'}}
+                                    />
+                                </TableCell>
+                                <TableCell
+                                    align="left"
+                                    sortDirection={sort === 'name' ? dir.toLowerCase() : false}
                                 >
-                                    Name
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell align="right">Latitude</TableCell>
-                            <TableCell align="right">Longitude</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {placeItems}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPage={size}
-                                count={places.length}
-                                page={page}
-                                onChangePage={handleChangePage}
-                                onChangeRowsPerPage={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
+                                    <TableSortLabel
+                                        active={sort === 'name'}
+                                        direction={dir === 'ASC' ? 'asc' : 'desc'}
+                                        onClick={(event) => handleSort(event, 'name')}
+                                    >
+                                        Name
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell align="right">Latitude</TableCell>
+                                <TableCell align="right">Longitude</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {placeItems}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPage={size}
+                                    count={places.length}
+                                    page={page}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
+            </Paper>
         </Fragment>
     );
 

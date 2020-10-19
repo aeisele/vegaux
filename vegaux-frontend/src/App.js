@@ -4,7 +4,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -13,12 +12,9 @@ const useStyles = makeStyles((theme) => ({
     layout: {
         width: 'auto',
         marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2)
-    },
-    paper: {
+        marginRight: theme.spacing(2),
         marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2)
+        marginBottom: theme.spacing(3)
     }
 }));
 
@@ -36,9 +32,7 @@ function App() {
                 </Toolbar>
             </AppBar>
             <main className={classes.layout}>
-                <Paper className={classes.paper}>
-                    <ReactRouter/>
-                </Paper>
+                <ReactRouter/>
             </main>
         </Fragment>
     );
