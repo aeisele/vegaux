@@ -4,6 +4,10 @@ import PlaceMap from "./PlaceMap";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {makeStyles} from "@material-ui/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import {Typography} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -23,6 +27,7 @@ const DistanceResultView = () => {
     });
     const [distanceMeters] = useState(25000);
     const [placesInDistance, setPlacesInDistance] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -31,13 +36,28 @@ const DistanceResultView = () => {
         })();
     }, [origin, distanceMeters]);
 
+    const handleResultClick = (id) => {
+        setSelectedPlace(id);
+    };
+
+    const handleUnselect = () => {
+        setSelectedPlace(null);
+    }
+
     const results = placesInDistance.map(result => {
         return (
-            <li>
-                {result.place.name}
-                <br />
-                {result.distanceMeters}
-            </li>
+            <ListItem
+                key={result.place.id}
+                button
+                divider
+                onClick={() => handleResultClick(result.place.id)}
+            >
+                <ListItemText>
+                    {result.place.name}
+                    <br />
+                    {result.distanceMeters}
+                </ListItemText>
+            </ListItem>
         );
     });
 
@@ -48,9 +68,10 @@ const DistanceResultView = () => {
             <Grid container spacing={2} className={classes.grid}>
                 <Grid item sm={4}>
                     <Paper className={classes.paper}>
-                        <ul>
+                        <Typography variant="h6" gutterBottom>Places in a {distanceMeters} meter radius</Typography>
+                        <List>
                             {results}
-                        </ul>
+                        </List>
                     </Paper>
                 </Grid>
                 <Grid item sm={8}>
@@ -58,6 +79,8 @@ const DistanceResultView = () => {
                         <PlaceMap
                             origin={origin}
                             placesInDistance={placesInDistance}
+                            selectedPlace={selectedPlace}
+                            onClosePopup={handleUnselect}
                         />
                     </Paper>
                 </Grid>

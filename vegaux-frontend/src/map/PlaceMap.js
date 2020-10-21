@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {createRef, Fragment, useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import {Map, TileLayer, Marker, Popup} from "react-leaflet";
 import {makeStyles} from "@material-ui/styles";
@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme) => ({
 
 const PlaceMap = (props) => {
 
-    const {origin, placesInDistance} = props;
+    const {origin, placesInDistance, selectedPlace, onClosePopup} = props;
 
     const [zoom] = useState(13);
+
+    const markerRefs = {};
 
     useEffect(() => {
         const L = require('leaflet');
@@ -28,11 +30,26 @@ const PlaceMap = (props) => {
         });
     }, []);
 
+    useEffect(() => {
+        if (markerRefs[selectedPlace]) {
+            const marker = markerRefs[selectedPlace].current;
+            if (marker != null) {
+                marker.leafletElement.openPopup();
+            }
+        }
+    }, [markerRefs, selectedPlace]);
+
     const markers = placesInDistance.map((distanceResult) => {
         const place = distanceResult.place;
+        const markerRef = createRef();
+        markerRefs[place.id] = markerRef;
         return (
-            <Marker key={place.id} position={[place.location.latitude, place.location.longitude]}>
-                <Popup>
+            <Marker
+                key={place.id}
+                position={[place.location.latitude, place.location.longitude]}
+                ref={markerRef}
+            >
+                <Popup onClose={onClosePopup}>
                     {place.name}
                     <br/>
                     {distanceResult.distanceMeters}

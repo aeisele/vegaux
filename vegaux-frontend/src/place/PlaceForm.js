@@ -14,7 +14,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import {Search} from "@material-ui/icons";
 import {geoCode} from "../geo/GeoCoder";
 import Paper from "@material-ui/core/Paper";
-import {commonStyles, useCommonStyles} from "../styles/commonStyles";
+import {useCommonStyles} from "../styles/commonStyles";
 
 const PlaceSchema = Yup.object().shape({
     name: Yup.string()
