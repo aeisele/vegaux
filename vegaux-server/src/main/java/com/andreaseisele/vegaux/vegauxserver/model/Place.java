@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @NoArgsConstructor
 @Getter

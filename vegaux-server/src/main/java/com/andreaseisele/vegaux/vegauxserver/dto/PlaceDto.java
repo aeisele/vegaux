@@ -3,8 +3,8 @@ package com.andreaseisele.vegaux.vegauxserver.dto;
 import com.andreaseisele.vegaux.vegauxserver.model.Address;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 public class PlaceDto {

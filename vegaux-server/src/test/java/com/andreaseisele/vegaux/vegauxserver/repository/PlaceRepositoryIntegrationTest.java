@@ -26,9 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PlaceRepositoryIntegrationTest {
 
-    @SuppressWarnings("rawtypes")
     @Container
-    static PostgreSQLContainer postGisContainer = new PostgreSQLContainer(new DockerImageName("postgis/postgis", "12-3.0-alpine").toString());
+    static PostgreSQLContainer<?> postGisContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgis/postgis:16-3.4-alpine").asCompatibleSubstituteFor("postgres"));
 
     @Autowired
     private PlaceRepository repository;

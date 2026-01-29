@@ -2,8 +2,8 @@ package com.andreaseisele.vegaux.vegauxserver.model;
 
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
 
 @MappedSuperclass

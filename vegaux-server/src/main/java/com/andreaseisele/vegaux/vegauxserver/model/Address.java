@@ -2,9 +2,9 @@ package com.andreaseisele.vegaux.vegauxserver.model;
 
 import lombok.Data;
 
-import javax.persistence.Embeddable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 @Embeddable
