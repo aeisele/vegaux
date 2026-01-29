@@ -11,11 +11,12 @@ import com.andreaseisele.vegaux.vegauxserver.service.PlaceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,13 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PlaceController.class)
-@Import({DtoMapper.class, com.andreaseisele.vegaux.vegauxserver.config.ServerConfig.class,
-        com.andreaseisele.vegaux.vegauxserver.dto.mapping.PlaceMap.class,
-        com.andreaseisele.vegaux.vegauxserver.dto.mapping.PlaceDtoMap.class,
-        com.andreaseisele.vegaux.vegauxserver.dto.mapping.PointConverters.PointToCoordinate.class,
-        com.andreaseisele.vegaux.vegauxserver.dto.mapping.PointConverters.CoordinateToPoint.class,
-        com.andreaseisele.vegaux.vegauxserver.geo.GeoUtil.class})
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 class PlaceControllerIntegrationTest {
 
     @Autowired

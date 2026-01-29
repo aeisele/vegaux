@@ -28,6 +28,7 @@ public class Place extends BaseEntity<Long> {
 
     private String name;
 
+    @Column(name = "LOCATION", columnDefinition = "geography(POINT, 4326)", nullable = false)
     private Point location;
 
     @Embedded

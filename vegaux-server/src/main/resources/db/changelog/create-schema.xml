@@ -12,7 +12,7 @@
             <column name="NAME" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="LOCATION" type="geography(POINT)">
+            <column name="LOCATION" type="geography(POINT, 4326)">
                 <constraints nullable="false"/>
             </column>
             <column name="ADDRESS_LINE1" type="varchar(255)">

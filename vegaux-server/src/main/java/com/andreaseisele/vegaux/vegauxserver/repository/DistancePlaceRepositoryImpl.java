@@ -18,7 +18,7 @@ public class DistancePlaceRepositoryImpl implements DistancePlaceRepository {
 
     @Override
     public List<DistanceResult> findInDistance(Point center, double radiusMeters) {
-        String jpql = "select p, distance(:center, p.location) from Place p where dwithin(:center, p.location, :radiusMeters) = true";
+        String jpql = "select p, distance(:center, p.location) from Place p where distance(:center, p.location) <= :radiusMeters";
 
         return entityManager.createQuery(jpql)
                 .setParameter("center", center)
