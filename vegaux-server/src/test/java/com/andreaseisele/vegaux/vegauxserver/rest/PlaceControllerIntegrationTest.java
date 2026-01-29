@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -49,7 +50,7 @@ class PlaceControllerIntegrationTest {
     @Test
     void testFindAll() throws Exception {
         final Place randomPlace = TestData.place();
-        final PageImpl<Place> page = new PageImpl<>(Collections.singletonList(randomPlace));
+        final PageImpl<Place> page = new PageImpl<>(Collections.singletonList(randomPlace), PageRequest.of(0, 10), 1);
         when(service.findAll(any(Pageable.class))).thenReturn(page);
 
         final String payload = objectMapper.writeValueAsString(page.map(dtoMapper::toDto));

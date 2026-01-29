@@ -1,23 +1,19 @@
 package com.andreaseisele.vegaux.vegauxserver.config;
 
-import org.locationtech.jts.geom.GeometryFactory;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Set;
 
 @Configuration
-public class ServerConfig {
+public class MapperConfig {
 
-    @Autowired
-    private Set<PropertyMap<?,?>> propertyMaps;
+    private final Set<PropertyMap<?,?>> propertyMaps;
 
-    @Bean
-    public GeometryFactory geometryFactory() {
-        return new GeometryFactory();
+    public MapperConfig(Set<PropertyMap<?, ?>> propertyMaps) {
+        this.propertyMaps = propertyMaps;
     }
 
     @Bean
