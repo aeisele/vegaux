@@ -46,40 +46,22 @@ Migrations are managed with Liquibase. Changelogs are located in `src/main/resou
 
 ### Running Migrations
 
-The Liquibase service is configured as a Docker Compose profile tool, so it won't start with the regular `docker compose up` command.
+Use the `liquibase.sh` wrapper script, which automatically starts postgres if needed:
 
 ```bash
-# Apply pending migrations
+./liquibase.sh              # Apply pending migrations (default)
+./liquibase.sh status       # Check migration status
+./liquibase.sh update-sql   # Preview SQL without applying
+./liquibase.sh rollback-count 1   # Rollback the last changeset
+./liquibase.sh history      # Show migration history
+./liquibase.sh validate     # Validate changelog syntax
+```
+
+Alternatively, use docker compose directly (must be run from `vegaux-server` directory):
+
+```bash
 docker compose run --rm liquibase update
-
-# Check migration status
 docker compose run --rm liquibase status
-
-# Preview SQL without applying
-docker compose run --rm liquibase update-sql
-```
-
-### Rollback
-
-```bash
-# Rollback the last changeset
-docker compose run --rm liquibase rollback-count 1
-
-# Rollback to a specific tag
-docker compose run --rm liquibase rollback --tag=v1.0
-```
-
-### Other Commands
-
-```bash
-# Show migration history
-docker compose run --rm liquibase history
-
-# Validate changelog syntax
-docker compose run --rm liquibase validate
-
-# Generate changelog from existing database
-docker compose run --rm liquibase generate-changelog --changelog-file=/liquibase/changelog/generated.xml
 ```
 
 ## Running the Application

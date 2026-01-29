@@ -25,11 +25,13 @@ services:
     volumes:
       - ./src/main/resources/db/changelog:/liquibase/changelog:ro
     environment:
-      LIQUIBASE_COMMAND_CHANGELOG_FILE: /liquibase/changelog/db.changelog-master.xml
+      LIQUIBASE_SEARCH_PATH: /liquibase/changelog
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: db.changelog-master.xml
       LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-postgres}
       LIQUIBASE_COMMAND_USERNAME: ${POSTGRES_USER:-postgres}
       LIQUIBASE_COMMAND_PASSWORD: ${POSTGRES_PASSWORD}
     working_dir: /liquibase
+    command: ["update"]
 
 volumes:
   vegaux-postgres-data:
